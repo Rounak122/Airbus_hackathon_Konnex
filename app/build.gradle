@@ -4,6 +4,12 @@ android {
     compileSdkVersion 30
     buildToolsVersion "29.0.3"
 
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         applicationId "com.galaxydefenders.konnex"
         minSdkVersion 24

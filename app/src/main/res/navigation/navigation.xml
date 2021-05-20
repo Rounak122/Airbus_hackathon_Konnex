@@ -11,6 +11,18 @@
         android:label="dashboard_fragment"
         tools:layout="@layout/fragment_dashboard" >
 
+        <action
+            android:id="@+id/action_nav_dashboardFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.galaxydefenders.konnex.ui.ChatFragment"
+        android:label="ChatFragment" >
+        <action
+            android:id="@+id/action_chatFragment_pop"
+            app:popUpTo="@id/chatFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
 </navigation>

@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Give Feedback"
+                android:text="Report Bug"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/grey_90"
                 android:textStyle="bold" />
@@ -52,12 +52,12 @@
         android:padding="@dimen/spacing_large">
 
         <EditText
-            android:id="@+id/et_feedback"
+            android:id="@+id/et_bug"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/grey_3"
             android:gravity="top"
-            android:hint="Write feedback ..."
+            android:hint="Bug Details..."
             android:lines="4"
             android:padding="@dimen/spacing_middle" />
 

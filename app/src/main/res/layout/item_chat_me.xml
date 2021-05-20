@@ -64,13 +64,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/shape_circle"
-            android:tint="#0382FE" />
+            app:tint="#0382FE" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/spacing_xsmall"
-            android:tint="@android:color/white"
+            app:tint="@android:color/white"
             app:srcCompat="@drawable/ic_done" />
 
     </RelativeLayout>
