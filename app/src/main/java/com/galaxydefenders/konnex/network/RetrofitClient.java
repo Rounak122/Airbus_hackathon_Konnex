@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-        private static final String OPERATOR_BASE_URL = "http://wr.rounak.tech/";
+        private static final String OPERATOR_BASE_URL = "https://airbus-back.herokuapp.com/";
 
         private static RetrofitClient mInstance;
         private Retrofit retrofit;

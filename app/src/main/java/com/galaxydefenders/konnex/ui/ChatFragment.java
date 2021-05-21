@@ -115,7 +115,7 @@ public class ChatFragment extends Fragment {
 
 
 
-        String jsonString = "{\"msg\":\"" + msg + "}";
+        String jsonString = "{\"msg\":\"" + msg + "\"}";
         RequestBody requestBody=RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonString);
 
         Call<ResponseBody> call = RetrofitClient

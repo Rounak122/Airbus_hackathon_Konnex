@@ -5,13 +5,12 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.HTTP;
 import retrofit2.http.POST;
 
 public interface Api {
 
         //Chat
-        @HTTP(method = "GET", path = "chatbot", hasBody = true)
+        @POST("chatbot")
         Call<ResponseBody> getReply(@Body RequestBody requestBody);
 
         //Feedback
@@ -23,8 +22,8 @@ public interface Api {
         Call<ResponseBody> postBug(@Body RequestBody requestBody);
 
         //Announcements
-        @GET("announcements")
-        Call<ResponseBody> getAnnouncements(@Body RequestBody requestBody);
+        @GET("announcement")
+        Call<ResponseBody> getAnnouncements();
 
 
 

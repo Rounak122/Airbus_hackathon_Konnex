@@ -2,18 +2,29 @@ package com.galaxydefenders.konnex.ui;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.galaxydefenders.konnex.R;
 import com.galaxydefenders.konnex.network.RetrofitClient;
 import com.galaxydefenders.konnex.utils.ViewAnimation;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -34,6 +45,7 @@ public class DashboardFragment extends Fragment {
     private View lyt_feedback;
     private View lyt_bug;
     private boolean isBackdrop;
+    private ListView announcement_list;
 
     FloatingActionButton fab_add;
     FloatingActionButton fab_move;
@@ -50,7 +62,7 @@ public class DashboardFragment extends Fragment {
         final NavController navController = NavHostFragment.findNavController(this);
 
 
-
+        announcement_list = v.findViewById(R.id.list_announcements);
         parent_view = v.findViewById(R.id.coordinator_dashboard);
         back_drop = v.findViewById(R.id.back_drop);
         isBackdrop=false;
@@ -118,6 +130,8 @@ public class DashboardFragment extends Fragment {
             }
         });
 
+        fetchAnnouncements();
+
 
 
         return v;
@@ -135,6 +149,25 @@ public class DashboardFragment extends Fragment {
             back_drop.setVisibility(View.VISIBLE);
             fab_move.hide();
             isBackdrop=true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }else{
             ViewAnimation.showOut(lyt_chat);
             ViewAnimation.showOut(lyt_feedback);
@@ -148,6 +181,61 @@ public class DashboardFragment extends Fragment {
 
     }
 
+
+    private void fetchAnnouncements(){
+
+        ArrayList<String> announcements = new ArrayList<>();
+
+        Call<ResponseBody> call = RetrofitClient
+                .getInstance()
+                .getApi()
+                .getAnnouncements();
+
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                try {
+                    if (response.isSuccessful()) {
+
+                        Log.i("ANNOUNCE", "onResponse: SUCCESS");
+
+                        JSONArray jsonarray = new JSONArray(response.body().string());
+                        for (int i = 0; i < jsonarray.length(); i++) {
+                            JSONObject jsonobject = jsonarray.getJSONObject(i);
+                            String a = jsonobject.getString("announce");
+                            announcements.add(a);
+                        }
+
+                        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+                                R.layout.item_textview, announcements);
+
+                        announcement_list.setAdapter(adapter);
+
+
+                    }
+                } catch (IOException | JSONException e) {
+
+                    Log.i("ANNOUNCE", "onResponse: FAIL");
+
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                if (Objects.equals(t.getMessage(), "Internet Not available"))
+
+                    Toast.makeText(getContext(), "Cannot load announcements", Toast.LENGTH_SHORT).show();
+//                    Log.i("ANNOUNCE", "onResponse: INTERNET UNAVIALABLE");
+
+
+            }
+        });
+
+    }
 
     private void showDialogFeedback() {
         final Dialog dialog = new Dialog(getContext());
@@ -168,10 +256,10 @@ public class DashboardFragment extends Fragment {
                     Toast.makeText(getContext(), "Please enter your response", Toast.LENGTH_SHORT).show();
                 }else {
 
+                    String jsonString = "{\"feedback\":\"" + response + "\"}";
+                    Log.i("DASHBOARD", "onClick: " + jsonString);
 
-
-                    String jsonString = "{\"feedback\":\"" + response + "}";
-                    RequestBody requestBody=RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonString);
+                   RequestBody requestBody=RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonString);
 
                     Call<ResponseBody> call = RetrofitClient
                             .getInstance()
@@ -185,6 +273,7 @@ public class DashboardFragment extends Fragment {
                             try {
                                 if (response.isSuccessful()) {
                                     Toast.makeText(getContext(), "Thanks for your Feedback", Toast.LENGTH_SHORT).show();
+                                    dialog.cancel();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -234,7 +323,9 @@ public class DashboardFragment extends Fragment {
 
 
 
-                    String jsonString = "{\"bugs\":\"" + response + "}";
+                    String jsonString = "{\"bugs\":\"" + response + "\"}";
+                    Log.i("DASHBOARD", "onClick: " + jsonString);
+
                     RequestBody requestBody=RequestBody.create(MediaType.parse("application/json; charset=utf-8"),jsonString);
 
                     Call<ResponseBody> call = RetrofitClient
@@ -249,6 +340,10 @@ public class DashboardFragment extends Fragment {
                             try {
                                 if (response.isSuccessful()) {
                                     Toast.makeText(getContext(), "Thanks for Reporting Bug", Toast.LENGTH_SHORT).show();
+                                    dialog.cancel();
+                                }else{
+                                    Log.i("DASHBOARD", "onResponse: " + response.errorBody() +"   " + response.code() +"   " +response.message());
+
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
